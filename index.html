@@ -11,6 +11,17 @@
 </head>
 <body>
 	<main class="app-shell">
+		<section id="controller-login-view" class="view resume-view hidden" aria-labelledby="controller-login-title">
+			<form id="controller-login-form" class="resume-content controller-login-form">
+				<p class="eyebrow">Host access</p>
+				<h1 id="controller-login-title">RUN THE<br><span>GAME</span></h1>
+				<label>Email<input id="controller-email" type="email" autocomplete="email" required></label>
+				<label>Password<input id="controller-password" type="password" autocomplete="current-password" required></label>
+				<p id="controller-login-message" class="controller-login-message" aria-live="polite"></p>
+				<button class="primary-button" type="submit">SIGN IN <span aria-hidden="true">→</span></button>
+			</form>
+		</section>
+
 		<section id="resume-view" class="view resume-view hidden" aria-labelledby="resume-title">
 			<div class="resume-content">
 				<p class="eyebrow">Saved game found</p>

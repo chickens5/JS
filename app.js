@@ -1,13 +1,16 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import { getDatabase, onValue, ref, set } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
 import { firebaseConfig } from './firebase-config.js';
 
 const TOTAL_ROUNDS = 10;
 const MAX_SCORE = TOTAL_ROUNDS * 10;
 const SAVE_KEY = 'trivia-night-game-v1';
-const isSpectatorMode = new URLSearchParams(window.location.search).get('view') === 'live';
-const gameId = new URLSearchParams(window.location.search).get('game') || 'trivia-night';
+const isControllerMode = new URLSearchParams(window.location.search).get('mode') === 'controller';
+const GAME_PATH = 'games/live-trivia-night';
 let remoteGameRef = null;
+let firebaseAuth = null;
+let controllerStarted = false;
 const DEFAULT_TEAMS = [
   'Witchy Tricks', 'Spooky Treats', 'Team ICD', 'Creative Crayons of CAC',
   'Ghouls & Goblins', 'Boo-tiful Minds', 'Conover’s Crew', 'Achieving My Best Life',
@@ -26,6 +29,11 @@ const state = {
 };
 
 const elements = {
+  controllerLoginView: document.querySelector('#controller-login-view'),
+  controllerLoginForm: document.querySelector('#controller-login-form'),
+  controllerEmail: document.querySelector('#controller-email'),
+  controllerPassword: document.querySelector('#controller-password'),
+  controllerLoginMessage: document.querySelector('#controller-login-message'),
   resumeView: document.querySelector('#resume-view'),
   setupView: document.querySelector('#setup-view'),
   gameView: document.querySelector('#game-view'),
@@ -105,7 +113,7 @@ function renderDefaultTeams() {
 }
 
 function showView(view) {
-  [elements.resumeView, elements.setupView, elements.gameView, elements.roundReadyView, elements.leaderboardView, elements.spectatorView].forEach((element) => {
+  [elements.controllerLoginView, elements.resumeView, elements.setupView, elements.gameView, elements.roundReadyView, elements.leaderboardView, elements.spectatorView].forEach((element) => {
     element.classList.toggle('hidden', element !== view);
   });
 }
@@ -130,7 +138,34 @@ function saveGame() {
 function initializeRemoteGame() {
   if (!firebaseConfig) return;
   const app = initializeApp(firebaseConfig);
-  remoteGameRef = ref(getDatabase(app), `games/${gameId}`);
+  firebaseAuth = getAuth(app);
+  remoteGameRef = ref(getDatabase(app), GAME_PATH);
+}
+
+function startController() {
+  if (controllerStarted) return;
+  controllerStarted = true;
+  if (hasSavedGame()) {
+    showView(elements.resumeView);
+  } else {
+    renderDefaultTeams();
+    showView(elements.setupView);
+  }
+}
+
+function requestControllerAccess() {
+  if (!firebaseAuth) {
+    elements.controllerLoginMessage.textContent = 'Firebase is not configured.';
+    showView(elements.controllerLoginView);
+    return;
+  }
+  onAuthStateChanged(firebaseAuth, (user) => {
+    if (user) {
+      startController();
+      return;
+    }
+    showView(elements.controllerLoginView);
+  });
 }
 
 function clearSavedGame() {
@@ -458,13 +493,20 @@ elements.restartGame.addEventListener('click', () => {
 });
 elements.downloadCsv.addEventListener('click', downloadResultsCsv);
 elements.playAgain.addEventListener('click', resetGame);
+elements.controllerLoginForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  elements.controllerLoginMessage.textContent = '';
+  try {
+    await signInWithEmailAndPassword(firebaseAuth, elements.controllerEmail.value, elements.controllerPassword.value);
+  } catch {
+    elements.controllerLoginMessage.textContent = 'Sign-in failed. Check the email and password.';
+  }
+});
 
 initializeRemoteGame();
 
-if (isSpectatorMode) {
+if (!isControllerMode) {
   startSpectatorSync();
-} else if (hasSavedGame()) {
-  showView(elements.resumeView);
 } else {
-  renderDefaultTeams();
+  requestControllerAccess();
 }
