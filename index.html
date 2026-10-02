@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Trivia Night</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	<main class="app-shell">
+		<section id="resume-view" class="view resume-view hidden" aria-labelledby="resume-title">
+			<div class="resume-content">
+				<p class="eyebrow">Saved game found</p>
+				<h1 id="resume-title">PICK UP<br><span>WHERE YOU LEFT OFF</span></h1>
+				<p>A previous trivia game is ready to continue.</p>
+				<div class="resume-actions">
+					<button id="resume-game" class="primary-button" type="button">RESUME GAME <span aria-hidden="true">→</span></button>
+					<button id="restart-game" class="resume-restart-button" type="button">START A NEW GAME</button>
+				</div>
+			</div>
+		</section>
+
+		<section id="setup-view" class="view setup-view" aria-labelledby="setup-title">
+			<div class="brand-lockup">
+				<span class="brand-mark" aria-hidden="true">?</span>
+				<p>Live Quiz Controller</p>
+			</div>
+
+			<div class="setup-content">
+				<p class="eyebrow">Get the room ready</p>
+				<h1 id="setup-title">TRIVIA<br><span>NIGHT</span></h1>
+				<p class="setup-intro">Ten rounds. One winning team. Set up the table, then let the questions fly.</p>
+
+				<div class="team-count-control">
+					<label for="team-count">How many teams are playing?</label>
+					<div class="number-stepper">
+						<button id="decrease-teams" class="icon-button" type="button" aria-label="Remove a team">−</button>
+						<input id="team-count" type="number" min="2" max="30" value="4" inputmode="numeric">
+						<button id="increase-teams" class="icon-button" type="button" aria-label="Add a team">+</button>
+					</div>
+				</div>
+
+				<div class="team-name-section">
+					<div class="section-heading">
+						<h2>SET UP TEAMS</h2>
+						<span id="team-count-label">4 teams</span>
+					</div>
+					<div id="team-name-inputs" class="team-name-inputs"></div>
+				</div>
+
+				<button id="start-game" class="primary-button" type="button">START THE GAME <span aria-hidden="true">→</span></button>
+			</div>
+		</section>
+
+		<section id="game-view" class="view game-view hidden" aria-labelledby="game-title">
+			<header class="game-header">
+				<div class="compact-brand"><span aria-hidden="true">?</span> TRIVIA NIGHT</div>
+				<div class="round-display"><span>ROUND</span><strong id="round-number">01</strong><b>/ 10</b></div>
+			</header>
+
+			<div class="game-layout">
+				<section class="turn-stage">
+					<p class="eyebrow">ROUND SCORECARD</p>
+					<h1 id="game-title" class="active-team-name">ALL TEAMS</h1>
+					<div class="question-card">
+						<span class="question-symbol" aria-hidden="true">?</span>
+						<p>Read your question aloud</p>
+						<small>Use the score stepper to record each team's result out of 10.</small>
+					</div>
+					<section class="score-chart-section live-score-chart-section" aria-labelledby="live-score-chart-title">
+						<h2 id="live-score-chart-title">LIVE STANDINGS</h2>
+						<div id="live-score-chart" class="score-chart" aria-label="Current team score distribution"></div>
+					</section>
+					<div class="score-table-wrap">
+						<div id="live-team-list" class="live-team-list" aria-label="Live scores and answer controls"></div>
+					</div>
+					<p id="round-message" class="round-message" aria-live="polite"></p>
+					<button id="confirm-round" class="confirm-round-button" type="button">CONFIRM ROUND <span aria-hidden="true">→</span></button>
+				</section>
+			</div>
+		</section>
+
+		<section id="round-ready-view" class="view round-ready-view hidden" aria-labelledby="round-ready-title">
+			<div class="ready-content">
+				<p class="eyebrow">Scores locked in</p>
+				<p class="ready-kicker">GET READY FOR</p>
+				<h1 id="round-ready-title">ROUND <span id="ready-round-number">02</span></h1>
+				<p class="ready-copy">Review the next question, then open the scorecard when every team is set.</p>
+				<button id="begin-round" class="primary-button" type="button">START ROUND <span aria-hidden="true">→</span></button>
+			</div>
+		</section>
+
+		<section id="leaderboard-view" class="view leaderboard-view hidden" aria-labelledby="leaderboard-title">
+			<div class="confetti confetti-one" aria-hidden="true"></div>
+			<div class="confetti confetti-two" aria-hidden="true"></div>
+			<div class="leaderboard-content">
+				<p class="eyebrow">Game complete</p>
+				<h1 id="leaderboard-title">FINAL<br><span>STANDINGS</span></h1>
+				<div id="winner-banner" class="winner-banner"></div>
+				<ol id="leaderboard-list" class="leaderboard-list"></ol>
+				<section class="score-chart-section" aria-labelledby="final-score-chart-title">
+					<h2 id="final-score-chart-title">FINAL SCORE DISTRIBUTION</h2>
+					<div id="final-score-chart" class="score-chart" aria-label="Final team score distribution"></div>
+				</section>
+				<div class="final-actions">
+					<button id="download-csv" class="download-button" type="button">DOWNLOAD CSV <span aria-hidden="true">↓</span></button>
+					<button id="play-again" class="primary-button" type="button">PLAY AGAIN <span aria-hidden="true">↻</span></button>
+				</div>
+			</div>
+		</section>
+
+		<section id="spectator-view" class="view spectator-view hidden" aria-labelledby="spectator-title">
+			<div class="spectator-content">
+				<p class="eyebrow">Live Trivia Night</p>
+				<h1 id="spectator-title">LIVE<br><span>STANDINGS</span></h1>
+				<p id="spectator-round" class="spectator-round">WAITING FOR THE GAME TO BEGIN</p>
+				<div id="spectator-winner" class="winner-banner hidden"></div>
+				<ol id="spectator-leaderboard" class="leaderboard-list"></ol>
+				<section class="score-chart-section" aria-labelledby="spectator-chart-title">
+					<h2 id="spectator-chart-title">SCORES OUT OF 100</h2>
+					<div id="spectator-score-chart" class="score-chart" aria-label="Live team score distribution"></div>
+				</section>
+			</div>
+		</section>
+	</main>
+	<script type="module" src="app.js"></script>
+</body>
+</html>
