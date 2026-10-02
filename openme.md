@@ -22,22 +22,37 @@ export const firebaseConfig = {
 };
 ```
 
-4. Configure Firebase Realtime Database rules so your audience can read the game. For a one-time event, allow access only while the event is running, then lock the database again afterward.
-5. Use the controller page normally. Each score change is published to Firebase.
+4. In Firebase Authentication, enable **Email/Password** and create one email/password user for the game host.
+5. Configure Firebase Realtime Database rules so everyone can view scores but only signed-in hosts can write them:
+
+```json
+{
+	"rules": {
+		"games": {
+			"$game": {
+				".read": true,
+				".write": "auth != null"
+			}
+		}
+	}
+}
+```
+
+6. Use the controller link below to sign in and score. Each score change is published to the one shared game record.
 
 ## Publish and share
 
 1. Put this `JS` folder in a GitHub repository and enable GitHub Pages from the repository's `main` branch.
-2. Use the deployed controller URL on the scoring device, for example `https://your-account.github.io/trivia-night/`.
-3. Give spectators this URL, then turn it into a QR code:
+2. Use this controller URL only on the scoring device:
 
 ```
-https://your-account.github.io/trivia-night/?view=live
+https://your-account.github.io/JS/?mode=controller
 ```
 
-To run another event on the same Firebase project without overwriting scores, add a unique game id to both URLs:
+3. Give spectators the base URL, then turn it into a QR code:
 
 ```
-https://your-account.github.io/trivia-night/?game=october-quiz
-https://your-account.github.io/trivia-night/?view=live&game=october-quiz
+https://your-account.github.io/JS/
 ```
+
+All links connect to the same shared live game. Keep the controller URL private; the public URL is read-only.

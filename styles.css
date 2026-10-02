@@ -31,6 +31,9 @@ button { cursor: pointer; }
 .controller-login-form label { display: grid; width: min(100%, 380px); gap: .45rem; color: var(--ink); text-align: left; font: .75rem "DM Mono", monospace; letter-spacing: .06em; text-transform: uppercase; }
 .controller-login-form input { width: 100%; padding: .8rem; border: 2px solid var(--ink); color: var(--ink); background: var(--paper); font: 1rem "Space Grotesk", sans-serif; }
 .controller-login-message { min-height: 1.2rem; margin: 0; color: var(--coral); font: .72rem "DM Mono", monospace; }
+.google-sign-in-button { width: min(100%, 380px); padding: 1rem; border: 2px solid var(--ink); color: var(--ink); background: var(--paper); font: .82rem "Archivo Black", sans-serif; letter-spacing: .04em; }
+.google-sign-in-button:hover { color: var(--paper); background: var(--ink); }
+.login-divider { margin: 0; color: #093b3d; font: .72rem "DM Mono", monospace; }
 .resume-view .eyebrow { color: var(--ink); }
 .resume-view h1 { font-size: clamp(3rem, 7vw, 6rem); }
 .resume-view h1 span { color: var(--yellow); text-shadow: 3px 3px 0 var(--ink); }

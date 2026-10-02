@@ -1,6 +1,7 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
-import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
+import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js';
 import { getDatabase, onValue, ref, set } from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-database.js';
+import { googleProvider } from './auth_provider.js';
 import { firebaseConfig } from './firebase-config.js';
 
 const TOTAL_ROUNDS = 10;
@@ -34,6 +35,7 @@ const elements = {
   controllerEmail: document.querySelector('#controller-email'),
   controllerPassword: document.querySelector('#controller-password'),
   controllerLoginMessage: document.querySelector('#controller-login-message'),
+  googleSignIn: document.querySelector('#google-sign-in'),
   resumeView: document.querySelector('#resume-view'),
   setupView: document.querySelector('#setup-view'),
   gameView: document.querySelector('#game-view'),
@@ -500,6 +502,22 @@ elements.controllerLoginForm.addEventListener('submit', async (event) => {
     await signInWithEmailAndPassword(firebaseAuth, elements.controllerEmail.value, elements.controllerPassword.value);
   } catch {
     elements.controllerLoginMessage.textContent = 'Sign-in failed. Check the email and password.';
+  }
+});
+elements.googleSignIn.addEventListener('click', async () => {
+  elements.controllerLoginMessage.textContent = '';
+  try {
+    await signInWithPopup(firebaseAuth, googleProvider);
+  } catch (error) {
+    if (error.code === 'auth/unauthorized-domain') {
+      elements.controllerLoginMessage.textContent = 'Add this site to Firebase Authentication authorized domains.';
+    } else if (error.code === 'auth/operation-not-allowed') {
+      elements.controllerLoginMessage.textContent = 'Enable Google as a Firebase Authentication sign-in provider.';
+    } else if (error.code === 'auth/popup-closed-by-user') {
+      elements.controllerLoginMessage.textContent = 'Google sign-in was canceled.';
+    } else {
+      elements.controllerLoginMessage.textContent = 'Google sign-in failed. Confirm the Firebase OAuth consent settings.';
+    }
   }
 });
 
