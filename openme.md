@@ -22,8 +22,10 @@ export const firebaseConfig = {
 };
 ```
 
-4. In Firebase Authentication, enable **Email/Password** and create one email/password user for the game host.
-5. Configure Firebase Realtime Database rules so everyone can view scores but only signed-in hosts can write them:
+4. In Firebase Authentication, enable **Google** as a sign-in provider. Under **Settings → Authorized domains**, add `chickens5.github.io`. If the OAuth consent screen is in testing mode, add the host's Google account as a test user in Google Cloud.
+5. The host signs in with Google at `https://chickens5.github.io/JS/?mode=controller`.
+6. Optionally enable **Email/Password** and create one email/password user as a fallback host login.
+7. Configure Firebase Realtime Database rules so everyone can view scores but only signed-in hosts can write them:
 
 ```json
 {
@@ -38,7 +40,7 @@ export const firebaseConfig = {
 }
 ```
 
-6. Use the controller link below to sign in and score. Each score change is published to the one shared game record.
+8. Use the controller link below to sign in and score. Each score change is published to the one shared game record.
 
 ## Publish and share
 
